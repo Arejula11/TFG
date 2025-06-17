@@ -1,0 +1,32 @@
+PLACE start, end;
+
+MARKING start;
+
+TRANSITION T0
+  CONSUME start;
+  PRODUCE end;
+
+TRANSITION T1
+  CONSUME start;
+  PRODUCE end;
+
+TRANSITION T2
+  CONSUME start;
+  PRODUCE end;
+
+TRANSITION T3
+  CONSUME start;
+  PRODUCE end;
+
+TRANSITION T4
+  CONSUME start;
+  PRODUCE end;
+
+TRANSITION T5
+  CONSUME start;
+  PRODUCE end;
+
+TRANSITION fin
+CONSUME end;
+PRODUCE start;
+        

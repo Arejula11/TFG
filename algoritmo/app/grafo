@@ -1,0 +1,12 @@
+// vias_clinicasgraphe
+digraph {
+	rankdir=LR
+	edge [arrowhead=open fontname=Arial]
+	node [fontname=Arial]
+	"Verificar_documentacion_completa_en_historia_clinica_electronica_(HCE)"
+	Consentimiento_informado
+	Planficar_fecha_de_la_intervencion_y_revision_por_anestesia
+	Solicitud_de_banco_de_tejidos_si_procede
+	Premedicacion
+	Verificar_que_ha_sido_valorada_por_anestesia_y_posibles_incidencias
+}

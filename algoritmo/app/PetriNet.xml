@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="iso-8859-1"?> 
+ <pnml> 
+ <net id="Net-One"             type="P/T net"> 
+ <token id="Default" enabled="true" red="0" green="0" blue="0"/><place id="start">
+ <graphics>
+ <position x="0" y="150.0"/>
+ </graphics>
+ <name>
+ <value>start</value>
+             </name><initialMarking>
+ <value>Default,1</value>
+ </initialMarking>
+ </place>
+<place id="end">
+ <graphics>
+ <position x="50" y="150.0"/>
+ </graphics>
+ <name>
+ <value>end</value>
+             </name><initialMarking>
+ <value>Default,0</value>
+ </initialMarking>
+ </place>
+<transition id="Verificar_documentacion_completa_en_historia_clinica_electronica_(HCE)">
+ <graphics>
+ <position x="0" y="240.0"/>
+ </graphics>
+ <name>
+                 <value>Verificar_documentacion_completa_en_historia_clinica_electronica_(HCE)</value></name>
+ </transition>
+<arc id="start to Verificar_documentacion_completa_en_historia_clinica_electronica_(HCE)" source="start" target="Verificar_documentacion_completa_en_historia_clinica_electronica_(HCE)">
+<graphics/>
+ <inscription>
+ <value>Default,1</value>
+ <graphics/>
+ </inscription>
+                         <tagged>
+ <value>false</value>
+ </tagged>
+ <type value="normal"/>
+ </arc>
+ <arc id="Verificar_documentacion_completa_en_historia_clinica_electronica_(HCE) to end with prob 1" source="Verificar_documentacion_completa_en_historia_clinica_electronica_(HCE)" target="end">
+<graphics/>
+ <inscription>
+ <value>Default,1;1</value>
+ <graphics/>
+                                 </inscription>
+ <tagged>
+ <value>false</value>
+ </tagged>
+ <type value="normal"/>
+ </arc>
+ <transition id="Consentimiento_informado">
+ <graphics>
+ <position x="50" y="240.0"/>
+ </graphics>
+ <name>
+                 <value>Consentimiento_informado</value></name>
+ </transition>
+<arc id="start to Consentimiento_informado" source="start" target="Consentimiento_informado">
+<graphics/>
+ <inscription>
+ <value>Default,1</value>
+ <graphics/>
+ </inscription>
+                         <tagged>
+ <value>false</value>
+ </tagged>
+ <type value="normal"/>
+ </arc>
+ <arc id="Consentimiento_informado to end with prob 1" source="Consentimiento_informado" target="end">
+<graphics/>
+ <inscription>
+ <value>Default,1;1</value>
+ <graphics/>
+                                 </inscription>
+ <tagged>
+ <value>false</value>
+ </tagged>
+ <type value="normal"/>
+ </arc>
+ <transition id="Planficar_fecha_de_la_intervencion_y_revision_por_anestesia">
+ <graphics>
+ <position x="100" y="240.0"/>
+ </graphics>
+ <name>
+                 <value>Planficar_fecha_de_la_intervencion_y_revision_por_anestesia</value></name>
+ </transition>
+<arc id="start to Planficar_fecha_de_la_intervencion_y_revision_por_anestesia" source="start" target="Planficar_fecha_de_la_intervencion_y_revision_por_anestesia">
+<graphics/>
+ <inscription>
+ <value>Default,1</value>
+ <graphics/>
+ </inscription>
+                         <tagged>
+ <value>false</value>
+ </tagged>
+ <type value="normal"/>
+ </arc>
+ <arc id="Planficar_fecha_de_la_intervencion_y_revision_por_anestesia to end with prob 1" source="Planficar_fecha_de_la_intervencion_y_revision_por_anestesia" target="end">
+<graphics/>
+ <inscription>
+ <value>Default,1;1</value>
+ <graphics/>
+                                 </inscription>
+ <tagged>
+ <value>false</value>
+ </tagged>
+ <type value="normal"/>
+ </arc>
+ <transition id="Solicitud_de_banco_de_tejidos_si_procede">
+ <graphics>
+ <position x="150" y="240.0"/>
+ </graphics>
+ <name>
+                 <value>Solicitud_de_banco_de_tejidos_si_procede</value></name>
+ </transition>
+<arc id="start to Solicitud_de_banco_de_tejidos_si_procede" source="start" target="Solicitud_de_banco_de_tejidos_si_procede">
+<graphics/>
+ <inscription>
+ <value>Default,1</value>
+ <graphics/>
+ </inscription>
+                         <tagged>
+ <value>false</value>
+ </tagged>
+ <type value="normal"/>
+ </arc>
+ <arc id="Solicitud_de_banco_de_tejidos_si_procede to end with prob 1" source="Solicitud_de_banco_de_tejidos_si_procede" target="end">
+<graphics/>
+ <inscription>
+ <value>Default,1;1</value>
+ <graphics/>
+                                 </inscription>
+ <tagged>
+ <value>false</value>
+ </tagged>
+ <type value="normal"/>
+ </arc>
+ <transition id="Premedicacion">
+ <graphics>
+ <position x="200" y="240.0"/>
+ </graphics>
+ <name>
+                 <value>Premedicacion</value></name>
+ </transition>
+<arc id="start to Premedicacion" source="start" target="Premedicacion">
+<graphics/>
+ <inscription>
+ <value>Default,1</value>
+ <graphics/>
+ </inscription>
+                         <tagged>
+ <value>false</value>
+ </tagged>
+ <type value="normal"/>
+ </arc>
+ <arc id="Premedicacion to end with prob 1" source="Premedicacion" target="end">
+<graphics/>
+ <inscription>
+ <value>Default,1;1</value>
+ <graphics/>
+                                 </inscription>
+ <tagged>
+ <value>false</value>
+ </tagged>
+ <type value="normal"/>
+ </arc>
+ <transition id="Verificar_que_ha_sido_valorada_por_anestesia_y_posibles_incidencias">
+ <graphics>
+ <position x="250" y="240.0"/>
+ </graphics>
+ <name>
+                 <value>Verificar_que_ha_sido_valorada_por_anestesia_y_posibles_incidencias</value></name>
+ </transition>
+<arc id="start to Verificar_que_ha_sido_valorada_por_anestesia_y_posibles_incidencias" source="start" target="Verificar_que_ha_sido_valorada_por_anestesia_y_posibles_incidencias">
+<graphics/>
+ <inscription>
+ <value>Default,1</value>
+ <graphics/>
+ </inscription>
+                         <tagged>
+ <value>false</value>
+ </tagged>
+ <type value="normal"/>
+ </arc>
+ <arc id="Verificar_que_ha_sido_valorada_por_anestesia_y_posibles_incidencias to end with prob 1" source="Verificar_que_ha_sido_valorada_por_anestesia_y_posibles_incidencias" target="end">
+<graphics/>
+ <inscription>
+ <value>Default,1;1</value>
+ <graphics/>
+                                 </inscription>
+ <tagged>
+ <value>false</value>
+ </tagged>
+ <type value="normal"/>
+ </arc>
+ </net>
+ </pnml>
+  

@@ -1,0 +1,10 @@
+DROP TABLE medico_de_paciente;
+DROP TABLE tarea_operacion;
+DROP TABLE medico;
+DROP TABLE opcion_tarea;
+DROP TABLE tarea;
+DROP TABLE fase;
+DROP TABLE operacion;
+DROP TABLE via;
+DROP TABLE paciente;
+DROP TYPE tipo_tarea;

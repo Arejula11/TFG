@@ -1,0 +1,1553 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title:  API vías clínicas
+  description: Documentación de la API de la herramienta software de la gestión de vías clínicas
+
+tags:
+  - name: 'Médicos'
+    description: 'Operaciones relacionadas con los médicos'
+  - name: 'Pacientes'
+    description: 'Operaciones relacionadas con los pacientes'
+  - name: 'Vías clínicas'
+    description: 'Operaciones relacionadas con las vías clínicas'
+  - name: 'Operaciones'
+    description: 'Operaciones relacionadas con las operaciones'
+  - name: 'Fases'
+    description: 'Operaciones relacionadas con las etapas de las vías clínicas'
+  - name: 'Tareas'
+    description: 'Operaciones relacionadas con las tareas de las vías clínicas'
+
+paths:
+  /user:
+    get:
+      summary: Obtiene la lista de médicos
+      tags: [Médicos]
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Lista de médicos obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - id
+                    - nombre
+                    - usuario
+                    - contrasegna
+                    - esAdmin
+                  properties:
+                    id:
+                      type: integer
+                      description: Identificador único del médico
+                      example: 1
+                    nombre:
+                      type: string
+                      description: Nombre del médico
+                      example: Juan Perez
+                    usuario:
+                      type: string
+                      description: Nombre de médico en el sistema
+                      example: jperez
+                    contrasegna:
+                      type: string
+                      description: Contraseña del médico en el sistema
+                      example: password123
+                    esAdmin:
+                      type: boolean
+                      description: Indica si el médico es administrador
+                      example: false
+        403:
+          description: Forbidden
+
+  /user/createUser:
+    post:
+      summary: Crea un nuevo usuario
+      tags: [Médicos]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nombre
+                - username
+                - password
+              properties:
+                nombre:
+                  type: string
+                  description: Nombre del médico
+                  example: Juan Perez
+                username:
+                  type: string
+                  description: Nombre de usuario en el sistema
+                  example: jperez
+                password:
+                  type: string
+                  description: Contraseña del médico
+                  example: password123
+      responses:
+        201:
+          description: Médico creado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: Identificador único del médico
+                        example: 59
+                      nombre:
+                        type: string
+                        description: Nombre del médico
+                        example: Juan Perez
+                      usuario:
+                        type: string
+                        description: Nombre de usuario en el sistema
+                        example: jperez
+                      contrasegna:
+                        type: string
+                        description: Contraseña del médico
+                        example: password123
+                      esadmin:
+                        type: boolean
+                        description: Indica si el médico es administrador
+                        example: false
+        500:
+          description: Error en el servidor
+  /login:
+    post:
+      summary: Inicio sesión 
+      tags: [Médicos]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Identificador del paciente
+                  example: jperez
+                password: 
+                  type: string
+                  description: Contraseña del usuario
+                  example: password123
+      responses:
+        200:
+          description: Inicio de sesión correcto
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: Bear token
+        500:
+          description: Error en el servidor
+        403:
+          description: Forbidden
+        409:
+          description: "Duplicate entry, unique constraint violated."
+  /logout:
+    post:
+      summary: Cerrar sesión 
+      tags: [Médicos]
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Se ha cerrado la sesión correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: Bear token
+        500:
+          description: Error en el servidor
+  /user/addPatient:
+    post:
+      summary: Añade un médico a un paciente
+      description: "Este endpoint solo puede ser accedido por usuarios con permisos de administrador."
+      tags: [Médicos]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                numHist:
+                  type: integer
+                  description: Identificador del paciente
+                  example: 1
+                usuarioMedico:
+                  type: string
+                  description: Usuario del médico
+                  example: jperez
+      responses:
+        200:
+          description: Médico añadido correctamente al paciente
+        500:
+          description: Error en el servidor
+        403:
+          description: Forbidden
+        409:
+          description: "Duplicate entry, unique constraint violated."
+  /user/updatePassword:
+    put:
+      summary: Actualiza la contraseña de un médico
+      tags: [Médicos]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  description: Nueva contraseña del médico
+                  example: newPassword123
+      responses:
+        200:
+          description: Contraseña actualizada correctamente
+        500:
+          description: Error en el servidor
+        403:
+          description: Forbidden
+
+
+
+
+  /patient:
+    get:
+      summary: Obtiene la lista de pacientes
+      tags: [Pacientes]
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Lista de pacientes obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - numhist
+                    - nombre
+                    - sexo
+                  properties:
+                    numhist:
+                      type: integer
+                      description: Número de historia clínica del paciente
+                      example: 111111
+                    nombre:
+                      type: string
+                      description: Nombre del paciente
+                      example: Juan Perez
+                    sexo:
+                      type: boolean
+                      description: Sexo del paciente, true si es hombre, false si es mujer
+                      example: true
+                    
+                    
+        403:
+          description: Forbidden
+  /patient/getOnePatient/:numhist:
+    get:
+      summary: Obtiene los datos de un paciente
+      tags: [Pacientes]
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Datos del paciente obtenidos exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - numhist
+                    - nombre
+                    - sexo
+                  properties:
+                    numhist:
+                      type: integer
+                      description: Número de historia clínica del paciente
+                      example: 111111
+                    nombre:
+                      type: string
+                      description: Nombre del paciente
+                      example: Juan Perez
+                    sexo:
+                      type: boolean
+                      description: Sexo del paciente, true si es hombre, false si es mujer
+                      example: true          
+        403:
+          description: Forbidden
+  /patient/getPatientsByDoctor/:id:
+    get:
+      summary: Obtiene la lista de pacientes de un médico dado su id
+      tags: [Pacientes]
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Lista de pacientes obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - numhist
+                    - nombre
+                    - sexo
+                  properties:
+                    numhist:
+                      type: integer
+                      description: Número de historia clínica del paciente
+                      example: 111111
+                    nombre:
+                      type: string
+                      description: Nombre del paciente
+                      example: Juan Perez
+                    sexo:
+                      type: boolean
+                      description: Sexo del paciente, true si es hombre, false si es mujer
+                      example: true          
+        403:
+          description: Forbidden
+  /patient/addPatient:
+    post:
+      summary: Añade un paciente y lo enlaza con el médico que lo añade
+      tags: [Pacientes]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - numhist
+                - nombre
+                - sexo
+              properties:
+                numhist:
+                  type: integer
+                  description: Número de historia clínica del paciente
+                  example: 111111
+                nombre:
+                  type: string
+                  description: Nombre del paciente
+                  example: Juan Perez
+                sexo:
+                  type: boolean
+                  description: Sexo del paciente, true si es hombre, false si es mujer
+                  example: true
+      responses:
+        200:
+          description: Paciente creado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de éxito
+                    example: Paciente creado correctamente
+                  body:
+                    type: object
+                    properties:
+                      paciente:
+                        type: object
+                        properties:
+                          nombre:
+                            type: string
+                            description: Nombre del paciente
+                            example: Juan Perez
+                          numhist:
+                            type: integer
+                            description: Número de historia clínica del paciente
+                            example: 111111
+                          sexo:
+                            type: boolean
+                            description: Sexo del paciente, true si es hombre, false si es mujer
+                            example: true
+                      doctor:
+                        type: integer
+                        description: Identificador del médico
+                        example: 2
+        500:
+          description: Error en el servidor
+        403:
+          description: Forbidden
+        409:
+          description: "Duplicate entry, unique constraint violated."
+  /patient/updatePatient:
+    put:
+      summary: Actualiza los datos de un paciente. El número de historia no puede ser modificado
+      tags: [Pacientes]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - numhist
+                - nombre
+                - sexo
+              properties:
+                numhist:
+                  type: integer
+                  description: Número de historia clínica del paciente
+                  example: 111111
+                nombre:
+                  type: string
+                  description: Nuevo nombre del paciente
+                  example: Juan Perez
+                sexo:
+                  type: boolean
+                  description: Nuevo sexo del paciente, true si es hombre, false si es mujer
+                  example: true
+      responses:
+        200:
+          description: Paciente actualizado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de éxito
+                    example: Paciente actualizada correctamente
+                  body:
+                    type: object
+                    properties:
+                      paciente:
+                        type: object
+                        properties:
+                          nombre:
+                            type: string
+                            description: Nombre del paciente
+                            example: Juan Perez
+                          numhist:
+                            type: integer
+                            description: Número de historia clínica del paciente
+                            example: 111111
+                          sexo:
+                            type: boolean
+                            description: Sexo del paciente, true si es hombre, false si es mujer
+                            example: true
+        500:
+          description: Error en el servidor
+        403:
+          description: Forbidden
+        404:
+          description: El paciente no existe
+        409:
+          description: "Duplicate entry, unique constraint violated."
+  /patient/deletePatient:
+    delete:
+      summary: Elimina los datos de un paciente de la base de datos
+      description: "Este endpoint solo puede ser accedido por usuarios con permisos de administrador."
+      tags: [Pacientes]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - numhist
+              properties:
+                numhist:
+                  type: integer
+                  description: Número de historia clínica del paciente
+                  example: 111111
+      responses:
+        200:
+          description: Paciente eliminado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de éxito
+                    example: Paciente eliminado correctamente
+                  
+        500:
+          description: Error en el servidor
+        403:
+          description: Forbidden
+        400:
+          description: "No se ha eliminado al paciente"
+  /operacion:
+    get:
+      summary: Obtiene la lista de todas las operaciones 
+      tags: [Operaciones]
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Lista de operaciones obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - id
+                    - indice
+                    - edad
+                    - fecha
+                    - etiqueta
+                    - idvia
+                    - idoperacion
+                    - numhist
+                  properties:
+                    id:
+                      type: integer
+                      description: Identificador único de la operación
+                      example: 1
+                    indice:
+                      type: integer
+                      description: Índice de la operación
+                      example: 21
+                    edad:
+                      type: integer
+                      description: Edad del paciente en el momento de la operación
+                      example: 21
+                    fecha:
+                      type: string
+                      format: date-time
+                      description: Fecha de la operación
+                      example: 2024-11-07T00:00:00.000Z
+                    etiqueta:
+                      type: string
+                      description: Descripción de la operación
+                      example: artroplasita primera izquierda
+                    idvia:
+                      type: integer
+                      description: Identificador de la vía clínica
+                      example: 1
+                    idoperacion:
+                      type: integer
+                      description: Identificador único de la operación
+                      example: 1
+                    numhist:
+                      type: integer
+                      description: Número de historia clínica del paciente
+                      example: 111111
+                    
+                    
+        403:
+          description: Forbidden
+  /operacion/via/:idOperacion:
+    get:
+      summary: Obtiene la via clinica completa (fases, tareas y estado de las tareas) 
+      tags: [Operaciones]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: idOperacion
+          required: true
+          description: Id de la operación
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Vía clínica obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idVia:
+                    type: integer
+                    description: Identificador de la vía clínica
+                    example: 1
+                  fases:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: Identificador único de la fase
+                          example: 1
+                        nombre:
+                          type: string
+                          description: Nombre de la fase
+                          example: Preingreso
+                        idvia:
+                          type: integer
+                          description: Identificador de la vía a la que pertenece la fase
+                          example: 1
+                        tareas:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                description: Identificador único de la tarea
+                                example: 1
+                              descripcion:
+                                type: string
+                                description: Descripción de la tarea
+                                example: Realización de radiografías y telemétricas
+                              id_fase:
+                                type: integer
+                                description: Identificador de la fase a la que pertenece la tarea
+                                example: 1
+                              tipo:
+                                type: string
+                                description: Tipo de tarea
+                                example: opciones
+                              opciones:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      description: Identificador único de la opción
+                                      example: 1
+                                    descripcion:
+                                      type: string
+                                      description: Descripción de la opción
+                                      example: Correcto
+                                    id_tarea:
+                                      type: integer
+                                      description: Identificador de la tarea a la que pertenece la opción
+                                      example: 4
+                              estado:
+                                type: integer
+                                nullable: true
+                                description: Estado de la tarea
+                                example: 1
+                    
+        403:
+          description: Forbidden
+  /operacion/tareas/:idOperacion:
+    get:
+      summary: Obtiene las tareas de una operación
+      tags: [Operaciones]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: idOperacion
+          required: true
+          description: Id de la operación
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Vía clínica obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                  - idtarea
+                  - idoperacion
+                  - completada
+                  - opcion
+                  - valor
+                  properties:
+                    id:
+                      type: integer
+                      description: Identificador único de la tarea
+                      example: 1
+                    estado:
+                         oneOf:
+                           - type: boolean
+                           - type: integer
+                         description: Estado de la tarea
+                         example: false               
+        403:
+          description: Forbidden
+  /operacion/:numhist:
+    get:
+      summary: Obtiene la lista de las operaciones de un paciente
+      tags: [Operaciones]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: numhist
+          required: true
+          description: Número de historia clínica del paciente
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Lista de operaciones de un paciente obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - id
+                    - indice
+                    - edad
+                    - fecha
+                    - etiqueta
+                    - idvia
+                    - idoperacion
+                    - numhist
+                  properties:
+                    id:
+                      type: integer
+                      description: Identificador único de la operación
+                      example: 1
+                    indice:
+                      type: integer
+                      description: Índice de la operación
+                      example: 21
+                    edad:
+                      type: integer
+                      description: Edad del paciente en el momento de la operación
+                      example: 21
+                    fecha:
+                      type: string
+                      format: date-time
+                      description: Fecha de la operación
+                      example: 2024-11-07T00:00:00.000Z
+                    etiqueta:
+                      type: string
+                      description: Descripción de la operación
+                      example: artroplasita primera izquierda
+                    idvia:
+                      type: integer
+                      description: Identificador de la vía clínica
+                      example: 1
+                    idoperacion:
+                      type: integer
+                      description: Identificador único de la operación
+                      example: 1
+                    numhist:
+                      type: integer
+                      description: Número de historia clínica del paciente
+                      example: 111111
+                    
+                    
+        403:
+          description: Forbidden
+  /operacion/data/:id:
+    get:
+      summary: Obtiene la información de una operaciones 
+      tags: [Operaciones]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Identificador de la operación
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Información de la operación obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Identificador único de la operación
+                    example: 1
+                  indice:
+                    type: integer
+                    description: Índice de la operación
+                    example: 21
+                  edad:
+                    type: integer
+                    description: Edad del paciente en el momento de la operación
+                    example: 21
+                  fecha:
+                    type: string
+                    format: date-time
+                    description: Fecha de la operación
+                    example: 2024-11-07T00:00:00.000Z
+                  etiqueta:
+                    type: string
+                    description: Descripción de la operación
+                    example: artroplasita primera izquierda
+                  idvia:
+                    type: integer
+                    description: Identificador de la vía clínica
+                    example: 1
+                  idoperacion:
+                    type: integer
+                    description: Identificador único de la operación
+                    example: 1
+                  numhist:
+                    type: integer
+                    description: Número de historia clínica del paciente
+                    example: 111111
+                    
+                    
+        403:
+          description: Forbidden
+  /operacion/create:
+    post:
+      summary: Añade una operación a un paciente
+      tags: [Operaciones]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - indice
+                - edad
+                - fecha
+                - etiqueta
+                - idvia
+                - numhist
+              properties:
+                indice:
+                  type: integer
+                  description: Índice de la operación
+                  example: 21
+                edad:
+                  type: integer
+                  description: Edad del paciente en el momento de la operación
+                  example: 21
+                fecha:
+                  type: string
+                  format: date
+                  description: Fecha de la operación
+                  example: 2024-11-07
+                etiqueta:
+                  type: string
+                  description: Descripción de la operación
+                  example: artroplastia primera izquierda
+                idvia:
+                  type: integer
+                  description: Identificador de la vía clínica
+                  example: 1
+                numhist:
+                  type: integer
+                  description: Número de historia clínica del paciente
+                  example: 111111
+      responses:
+        200:
+          description: Operación creada correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de éxito
+                    example: Operación creada correctamente
+                  body:
+                    type: object
+                    properties:
+                      operacion:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              description: Identificador único de la operación
+                              example: 13
+                            indice:
+                              type: integer
+                              description: Índice de la operación
+                              example: 21
+                            edad:
+                              type: integer
+                              description: Edad del paciente en el momento de la operación
+                              example: 21
+                            fecha:
+                              type: string
+                              format: date
+                              description: Fecha de la operación
+                              example: 2024-11-06
+                            etiqueta:
+                              type: string
+                              description: Descripción de la operación
+                              example: artroplastia primera izquierda
+                            idvia:
+                              type: integer
+                              description: Identificador de la vía clínica
+                              example: 1
+                            numhist:
+                              type: integer
+                              description: Número de historia clínica del paciente
+                              example: 111111
+                      tareas:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            idtarea:
+                              type: integer
+                              description: Identificador único de la tarea
+                              example: 1
+                            idoperacion:
+                              type: integer
+                              description: Identificador de la operación
+                              example: 13
+                            completada:
+                              type: boolean
+                              nullable: true
+                              description: Indica si la tarea está completada
+                              example: null
+                            opcion:
+                              type: string
+                              nullable: true
+                              description: Opción seleccionada para la tarea
+                              example: null
+        500:
+          description: Error en el servidor
+        403:
+          description: Forbidden
+        409:
+          description: "Duplicate entry, unique constraint violated."
+
+  /operacion/update:
+    put:
+      summary: Actualiza los datos de una operación. El número de historia no puede ser modificado
+      tags: [Operaciones]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - indice
+                - edad
+                - fecha
+                - etiqueta
+                - idvia
+                - idoperacion
+              properties:
+                indice:
+                  type: integer
+                  description: Índice de la operación
+                  example: 21
+                edad:
+                  type: integer
+                  description: Edad del paciente en el momento de la operación
+                  example: 25
+                fecha:
+                  type: string
+                  format: date
+                  description: Fecha de la operación
+                  example: 2024-11-07
+                etiqueta:
+                  type: string
+                  description: Descripción de la operación
+                  example: artroplasita primera izquierda
+                idvia:
+                  type: integer
+                  description: Identificador de la vía clínica
+                  example: 1
+                idoperacion:
+                  type: integer
+                  description: Identificador único de la operación
+                  example: 1
+      responses:
+        200:
+          description: Operación actualizado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de éxito
+                    example: Operación actualizada correctamente
+                  body:
+                    type: object
+                    properties:
+                      operacion:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            description: Identificador único de la operación
+                            example: 1
+                          indice:
+                            type: integer
+                            description: Índice de la operación
+                            example: 21
+                          edad:
+                            type: integer
+                            description: Edad del paciente en el momento de la operación
+                            example: 25
+                          fecha:
+                            type: string
+                            format: date-time
+                            description: Fecha de la operación
+                            example: 2024-11-07T00:00:00.000Z
+                          etiqueta:
+                            type: string
+                            description: Descripción de la operación
+                            example: artroplasita primera izquierda
+                          idvia:
+                            type: integer
+                            description: Identificador de la vía clínica
+                            example: 1
+                          idoperacion:
+                            type: integer
+                            description: Identificador único de la operación
+                            example: 1
+        500:
+          description: Error en el servidor
+        403:
+          description: Forbidden
+        409:
+          description: "Duplicate entry, unique constraint violated."
+  /operacion/updateEstado:
+    put:
+      summary: Actualiza el estado de las tareas de una operación
+      tags: [Operaciones]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - idOperacion
+                - tareas
+              properties:
+                idOperacion:
+                  type: integer
+                  description: Id de la operación
+                  example: 13
+                tareas:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - id
+                        - estado
+                      properties:
+                        id:
+                          type: integer
+                          description: Identificador único de la tarea
+                          example: 1
+                        estado:
+                          type: boolean
+                          description: Estado de la tarea
+                          example: false
+                  
+                
+      responses:
+        200:
+          description: Tareas actializadas correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de éxito
+                    example: Estado de tareas actualizado correctamente
+                 
+        500:
+          description: Error en el servidor
+        403:
+          description: Forbidden
+        409:
+          description: "Duplicate entry, unique constraint violated."
+  /operacion/delete:
+    delete:
+      summary: Elimina los datos de una operación de la base de datos
+      description: "Este endpoint solo puede ser accedido por usuarios con permisos de administrador."
+      tags: [Operaciones]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                numhist:
+                  type: integer
+                  description: Identificador de la operación
+                  example: 1
+      responses:
+        200:
+          description: Operación eliminada correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de éxito
+                    example: Operacion eliminada correctamente
+                  
+        500:
+          description: Error en el servidor
+        403:
+          description: Forbidden
+        400:
+          description: "No se ha eliminado la operación"
+  /vias:
+      get:
+        summary: Obtiene la lista de vías
+        tags: [Vías clínicas]
+        security:
+          - bearerAuth: []
+        responses:
+          200:
+            description: Lista de vías obtenida exitosamente
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - id
+                      - nombre
+                    properties:
+                      id:
+                        type: integer
+                        description: Identificador único de la vía clíncia
+                        example: 1
+                      nombre:
+                        type: string
+                        description: Nombre de la vía clínica
+                        example: via rodilla
+          403:
+            description: Forbidden
+  /vias/:id:
+      get:
+        summary: Obtiene una vía clínica completa dado un id
+        tags: [Vías clínicas]
+        security:
+          - bearerAuth: []
+        responses:
+          200:
+            description: Vía obtenida exitosamente
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: Identificador único de la vía clínica
+                      example: 1
+                    nombre:
+                      type: string
+                      description: Nombre de la vía clínica
+                      example: via rodilla
+                    fases:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            description: Identificador único de la fase
+                            example: 1
+                          nombre:
+                            type: string
+                            description: Nombre de la fase
+                            example: Preingreso
+                          idvia:
+                            type: integer
+                            description: Identificador de la vía a la que pertenece la fase
+                            example: 1
+                          tareas:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  description: Identificador único de la tarea
+                                  example: 1
+                                descripcion:
+                                  type: string
+                                  description: Descripción de la tarea
+                                  example: Realización de radiografías y telemétricas
+                                id_fase:
+                                  type: integer
+                                  description: Identificador de la fase a la que pertenece la tarea
+                                  example: 1
+                                tipo:
+                                  type: string
+                                  description: Tipo de tarea
+                                  example: opciones
+                                opciones:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: integer
+                                        description: Identificador único de la opción
+                                        example: 1
+                                      descripcion:
+                                        type: string
+                                        description: Descripción de la opción
+                                        example: Correcto
+                                      id_tarea:
+                                        type: integer
+                                        description: Identificador de la tarea a la que pertenece la opción
+                                        example: 4
+          403:
+            description: Forbidden
+  /tareas:
+      get:
+        summary: Obtiene las tareas
+        tags: [Tareas]
+        security:
+          - bearerAuth: []
+        responses:
+          200:
+            description: Lista de tareas obtenida exitosamente
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - id
+                      - descripción
+                      - id_fase
+                    properties:
+                      id:
+                        type: integer
+                        description: Identificador único de la tarea
+                        example: 1
+                      descripcion:
+                        type: string
+                        description: Descripción de la tarea
+                        example: Realización de radiografías y telemétricas
+                      id_fase:
+                        type: integer
+                        description: Identificador de la fase a la que pertenece la tarea
+                        example: 1
+                      tipo:
+                        type: string
+                        description: Tipo de tarea
+                        example: booleano
+          403:
+            description: Forbidden
+      post:
+        summary: Crea una nueva tarea
+        tags: 
+          - Tareas
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - descripcion
+                  - id_fase
+                  - tipo
+                properties:
+                  descripcion:
+                    type: string
+                    description: Descripción de la tarea
+                    example: Realización de radiografías y telemétricas
+                  id_fase:
+                    type: integer
+                    description: Identificador de la fase a la que pertenece la tarea
+                    example: 1
+                  tipo:
+                    type: string
+                    description: Tipo de tarea
+                    example: booleano || opciones
+                  opciones:
+                    type: array
+                    items:
+                      type: string
+                    description: Opciones de la tarea
+                    example: [si, no, tal vez]
+                  
+        responses:
+          201:
+            description: Tarea creada exitosamente
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      description: Mensaje de éxito
+                      example: Tarea creada correctamente
+                    body:
+                      type: object
+                      properties:
+                        tarea:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              description: Identificador único de la tarea
+                              example: 1
+                            descripcion:
+                              type: string
+                              description: Descripción de la tarea
+                              example: Realización de radiografías y telemétricas
+                            id_fase:
+                              type: integer
+                              description: Identificador de la fase a la que pertenece la tarea
+                              example: 1
+                            tipo:
+                              type: string
+                              description: Tipo de tarea
+                              example: booleano 
+
+          500:
+            description: Error en el servidor
+  /tareas/:id:
+      get:
+        summary: Obtiene una tarea dado un id
+        tags: [Tareas]
+        security:
+          - bearerAuth: []
+        responses:
+          200:
+            description: Tarea obtenida exitosamente
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - id
+                      - descripción
+                      - id_fase
+                    properties:
+                      id:
+                        type: integer
+                        description: Identificador único de la tarea
+                        example: 1
+                      nombre:
+                        type: string
+                        description: Descripción de la tarea
+                        example: Realización de radiografías y telemétricas
+                      id_fase:
+                        type: integer
+                        description: Identificador de la fase a la que pertenece la tarea
+                        example: 1
+          403:
+            description: Forbidden
+  /tareas/viaclinica/:id_via:
+    get:
+        summary: Obtiene las tareas de una vía clinica
+        tags: [Tareas]
+        security:
+          - bearerAuth: []
+        responses:
+          200:
+            description: Lista de tareas obtenida exitosamente
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - id
+                      - descripción
+                      - id_fase
+                    properties:
+                      id:
+                        type: integer
+                        description: Identificador único de la tarea
+                        example: 1
+                      nombre:
+                        type: string
+                        description: Descripción de la tarea
+                        example: Realización de radiografías y telemétricas
+                      id_fase:
+                        type: integer
+                        description: Identificador de la fase a la que pertenece la tarea
+                        example: 1
+          403:
+            description: Forbidden
+  /tareas/operacion/:id_operacion:
+    get:
+        summary: Obtiene las tareas de una operación
+        tags: [Tareas]
+        security:
+          - bearerAuth: []
+        responses:
+          200:
+            description: Lista de tareas obtenida exitosamente
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - id
+                      - descripción
+                      - id_fase
+                    properties:
+                      id:
+                        type: integer
+                        description: Identificador único de la tarea
+                        example: 1
+                      nombre:
+                        type: string
+                        description: Descripción de la tarea
+                        example: Realización de radiografías y telemétricas
+                      id_fase:
+                        type: integer
+                        description: Identificador de la fase a la que pertenece la tarea
+                        example: 1
+          403:
+            description: Forbidden
+  /fases:
+      get:
+        summary: Obtiene las fases
+        tags: [Fases]
+        security:
+          - bearerAuth: []
+        responses:
+          200:
+            description: Lista de fases obtenida exitosamente
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - id
+                      - nombre
+                      - idvia
+                    properties:
+                      id:
+                        type: integer
+                        description: Identificador único de la fase
+                        example: 1
+                      nombre:
+                        type: string
+                        description: Nombre de la fase
+                        example: Preingreso
+                      idvia:
+                        type: integer
+                        description: Identificador de la via a la que pertenece la fase
+                        example: 1
+          403:
+            description: Forbidden
+      post:
+        summary: Crea una nueva fase
+        tags: 
+          - Fases
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - nombre
+                  - idvia
+                properties:
+                  nombre:
+                    type: string
+                    description: Nombre de la fase
+                    example: Preingreso
+                  idvia:
+                    type: integer
+                    description: Identificador de la via a la que pertenece la fase
+                    example: 1                  
+        responses:
+          201:
+            description: Fase creada exitosamente
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                          id:
+                            type: integer
+                            description: Identificador único de la fase
+                            example: 1
+                          nombre:
+                            type: string
+                            description: Nombre de la fase
+                            example: Preingreso
+                          idvia:
+                            type: integer
+                            description: Identificador de la via a la que pertenece la fase
+                            example: 1
+          500:
+            description: Error en el servidor
+
