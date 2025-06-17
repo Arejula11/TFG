@@ -1,0 +1,66 @@
+version: "3.8"
+
+services:
+  frontend:
+    build: ./Frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  backend:
+    build: ./Backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - algoritmo
+      - lola_service
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=myuser
+      - DB_PASSWORD=mypassword
+      - DB_NAME=practica
+      - ALGORITMO_URL=http://algoritmo:8001
+      - LOLA_URL=http://lola_service:8002
+    networks:
+      - app-network
+
+  algoritmo:
+    build: ./algoritmo
+    ports:
+      - "8000:8000"
+    networks:
+      - app-network
+
+  lola_service:
+    build: ./lola_service
+    ports:
+      - "8001:8001"
+    networks:
+      - app-network
+
+  db:
+    image: postgres:15
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: practica
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./DB/sql/createTables.sql:/docker-entrypoint-initdb.d/createTables.sql:ro
+    networks:
+      - app-network
+
+volumes:
+  db_data:
+
+networks:
+  app-network:
+    driver: bridge

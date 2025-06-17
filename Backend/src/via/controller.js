@@ -152,7 +152,7 @@ const getViaGraphFromData = async (req, res, next) => {
         contentType: file.mimetype,
         });
 
-        const response = await axios.post('http://localhost:8000/run-algorithm', form, {
+        const response = await axios.post(process.env.GRAPH_API_URL, form, {
         headers: form.getHeaders(),
         });
 
