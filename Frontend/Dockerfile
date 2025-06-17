@@ -1,22 +1,27 @@
-# Build Stage
+# Etapa de construcción
 FROM node:18 AS build
 
 WORKDIR /client
 
-# Install dependencies
+# Instalar dependencias
 COPY package*.json ./
 RUN npm install
 
-# Copy the source code and build the app
+# Copiar el resto del código y compilar la app
 COPY . .
 RUN npm run build
 
-# Serve Stage
+# Etapa de producción con Nginx
 FROM nginx:1.27
 
-# Copy the build output from the build stage to Nginx's default directory
+# Copiar archivo de configuración de Nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copiar archivos generados por Vite al directorio de Nginx
 COPY --from=build /client/dist /usr/share/nginx/html
 
-# Expose the port and run Nginx
+# Exponer el puerto
 EXPOSE 80
+
+# Iniciar Nginx
 CMD ["nginx", "-g", "daemon off;"]
