@@ -5,6 +5,7 @@ import { getGraph } from "../utils/getGraph";
 import { useNavigate } from "react-router-dom";
 import { parseGraphNodes } from "../utils/parseGraph";
 import { NewViaContext } from "../Context/NewViaContext";
+import toast from "react-hot-toast";
 
 
 export const AdminSubmitCsv = () => {
@@ -40,15 +41,26 @@ export const AdminSubmitCsv = () => {
         }
         try {
             const response = await getGraph(file); 
-            if (response) {
-                const nodes = parseGraphNodes(response.graph);
+            console.log('Response from getGraph:', response); // Log the response data
+            if (response.status === 201) {
+                const data = await response.json();
+                const nodes = parseGraphNodes(data.graph);
                 addNodos(nodes);
-                addGraph(response.graph);
+                addGraph(data.graph);
                 navigate("/admin/newViaClinica/grafo");
-            }
+            } 
             setIsLoading(false);
         } catch (error) {
+            const data = error.response;
             console.error("Error al generar el grafo:", error);
+            if (error.status === 400 && data.data.message === 'Petri net has deadlocks') {
+                toast.error("Red de Petri con bloqueso detectados. Por favor, revisa el archivo CSV y vuelve a intentarlo.");
+            } else if (error.status === 400 && data.data.message === 'Error processing the file') {
+                toast.error("Error al procesar el archivo CSV. Asegúrate de que el formato es correcto y vuelve a intentarlo.");
+            } else {
+                toast.error("Error al generar el grafo. Por favor, revisa el archivo CSV y vuelve a intentarlo.");
+            }
+            setIsLoading(false);
         }
     };
 

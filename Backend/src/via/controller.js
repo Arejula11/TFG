@@ -160,10 +160,40 @@ const getViaGraphFromData = async (req, res, next) => {
         return res.status(500).json({ message: 'Error processing the file' });
         }
 
-        // SOLO se devuelve el contenido útil
+        
         const graph = response.data.result;
         const petri_net = response.data.petri_net;
+        
+        
+        // Validamos la red de petri con el microservicio
+        const response_net = await axios.post(process.env.LOLA_API_URL, {
+            model_text: petri_net,
+        });
 
+        if (response_net.status !== 200) {
+            return res.status(500).json({ message: 'Error validating Petri net' });
+        }
+        // console.log('Petri net validation response:', response_net.data);
+        //La respuesta contiene el análisis de la red de Petri, hay que parsearla
+        const lolaOutput = response_net.data;
+        if (lolaOutput.errors && lolaOutput.errors.length > 0) {
+            return res.status(400).json({ message: 'Petri net validation failed', errors: lolaOutput.errors });
+        }
+        const deadlockMatch = lolaOutput.match(/result:\s*(yes|no)/i);
+        let hasDeadlock = null;
+        if (deadlockMatch) {
+            hasDeadlock = deadlockMatch[1].toLowerCase() === 'yes';
+            console.log('Deadlock detected:', hasDeadlock);
+            if (hasDeadlock) {
+                console.log('Deadlock detected in LOLA output');
+            } else {
+                console.log('No deadlock result found in LOLA output, assuming no deadlock', deadlockMatch[1].toLowerCase());
+                hasDeadlock = false;
+            }
+        }
+        if (hasDeadlock) {
+            return res.status(400).json({ message: 'Petri net has deadlocks', output: lolaOutput });
+        }
 
         return res.status(201).json({
         message: "Via created successfully",
