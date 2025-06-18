@@ -41,7 +41,6 @@ export const AdminSubmitCsv = () => {
         }
         try {
             const response = await getGraph(file); 
-            console.log('Response from getGraph:', response); // Log the response data
             if (response.status === 201) {
                 const data = response.data;
                 const nodes = parseGraphNodes(data.graph);
@@ -54,7 +53,7 @@ export const AdminSubmitCsv = () => {
             const data = error.response;
             console.error("Error al generar el grafo:", error);
             if (error.status === 400 && data.data.message === 'Petri net has deadlocks') {
-                toast.error("Red de Petri con bloqueso detectados. Por favor, revisa el archivo CSV y vuelve a intentarlo.");
+                toast.error("Red de Petri con bloqueos detectados. Por favor, revisa el archivo CSV y vuelve a intentarlo.");
             } else if (error.status === 400 && data.data.message === 'Error processing the file') {
                 toast.error("Error al procesar el archivo CSV. Asegúrate de que el formato es correcto y vuelve a intentarlo.");
             } else {
