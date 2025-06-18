@@ -43,7 +43,7 @@ export const AdminSubmitCsv = () => {
             const response = await getGraph(file); 
             console.log('Response from getGraph:', response); // Log the response data
             if (response.status === 201) {
-                const data = await response.json();
+                const data = response.data;
                 const nodes = parseGraphNodes(data.graph);
                 addNodos(nodes);
                 addGraph(data.graph);
