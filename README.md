@@ -67,11 +67,7 @@ This project addresses these issues in the context of a research initiative betw
 ## Local Setup
 
 ### Requirements
-
-* Node.js ≥ 18
-* Python ≥ 3.9
-* PostgreSQL ≥ 13
-* Docker (optional, recommended for LoLA)
+* Docker 
 
 ### Execution Steps
 1. **Clone the repository**:
@@ -80,7 +76,8 @@ This project addresses these issues in the context of a research initiative betw
    ````
 2. **Execute the docker-compose file**:
    ```bash
-   docker-compose up -d
+   cd TFG
+   docker compose up -d
    ```
 3. **Open browser** and navigate to `http://localhost:80` to access the frontend.
 
