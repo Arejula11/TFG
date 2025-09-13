@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom"
+import { ButtonMedico } from "../Components/ButtonMedico";
 
 export const AdminHome = () => {
   const navigate = useNavigate();
@@ -21,7 +22,9 @@ export const AdminHome = () => {
   }
 
   return (
+
     <div className="w-full h-full flex flex-col items-center align-middle justify-center">
+      <ButtonMedico />
     <img src={"logo.svg"} alt="Logo" />
     <h1 className="text-blueGreen text-7xl font-semibold mt-3">Bienvenido al sistema</h1>
     <div className="flex flex-col gap-2">
